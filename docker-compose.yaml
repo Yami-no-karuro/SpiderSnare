@@ -1,0 +1,20 @@
+services:
+  php-apache:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    container_name: spider-snare-php
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - PHP_MEMORY_LIMIT=528M
+      - PHP_UPLOAD_MAX_FILESIZE=64M
+      - PHP_POST_MAX_SIZE=64M
+    networks:
+      - spider-snare-network
+
+networks:
+  spider-snare-network:
