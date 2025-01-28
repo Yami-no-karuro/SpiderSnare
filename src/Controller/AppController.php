@@ -14,14 +14,14 @@ class AppController
 {
 
   protected const CORPUS_DATA_PATH = 'corpus/corpus.csv';
+  protected const BYTE_DELAY = 5000;
 
   /**
    * @param Engine $template
-   * @return string
+   * @return void
    */
-  public function appAction(Engine $template): string
+  public function appAction(Engine $template): void
   {
-
     $links = [];
     $corpus = $this->parseCorpus();
 
@@ -30,14 +30,46 @@ class AppController
       $links[] = $corpus[$idx];
     }
 
-    $html = $template->render('idx.template.php', [
-      'title' => 'SpiderSnare',
-      'description' => 'Simple, a trap for spiders and crawlers.',
+    $content = $template->render('app.template.php', [
+      'title' => 'Spider-Snare',
+      'description' => 'A simple loop-hole for web-spiders and crawlers.',
       'author' => 'Yami-no-karuro',
       'links' => $links
     ]);
 
-    return $html;
+    $this->sendHeaders($content);
+    $this->streamContent($content);
+  }
+
+  /**
+   * @param string $response
+   * @return void
+   */
+  protected function sendHeaders(string &$response): void
+  {
+    header('HTTP/1.1 200 OK');
+    header('Content-Type: text/html');
+    header('Content-Length: ' . strlen($response));
+  }
+
+  /**
+   * @param string $response
+   * @return void
+   */
+  protected function streamContent(string &$response): void
+  {
+    ob_implicit_flush(true);
+    ob_end_flush();
+
+    $splitted = str_split($response);
+    foreach ($splitted as $byte) {
+      echo $byte;
+
+      flush();
+      usleep(self::BYTE_DELAY);
+    }
+
+    flush();
   }
 
   /**

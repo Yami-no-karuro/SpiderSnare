@@ -44,39 +44,6 @@ class Kernel
   public function run(): void
   {
     $controller = new AppController();
-    $response = $controller->appAction($this->engine);
-
-    $this->sendHeaders($response);
-    $this->streamResponse($response);
-  }
-
-  /**
-   * @param string $response
-   * @return void
-   */
-  protected function sendHeaders(string &$response): void
-  {
-    header('Content-Type: text/html');
-    header('Content-Length: ' . strlen($response));
-  }
-
-  /**
-   * @param string $response
-   * @return void
-   */
-  protected function streamResponse(string &$response): void
-  {
-    ob_implicit_flush(true);
-    ob_end_flush();
-
-    $splitted = str_split($response);
-    foreach ($splitted as $byte) {
-      echo $byte;
-
-      flush();
-      usleep(self::BYTE_DELAY);
-    }
-
-    flush();
+    $controller->appAction($this->engine);
   }
 }
