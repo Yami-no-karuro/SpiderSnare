@@ -13,6 +13,8 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class AppController
 {
 
+  protected const SLOW = false;
+
   /**
    * @param Engine $template
    * @return void
@@ -35,7 +37,7 @@ class AppController
     ]);
 
     $this->sendHeaders($content);
-    $this->streamContent($content);
+    $this->sendContent($content, self::SLOW);
   }
 
   /**
@@ -51,10 +53,16 @@ class AppController
 
   /**
    * @param string $response
+   * @param bool $slow
    * @return void
    */
-  protected function streamContent(string &$response): void
+  protected function sendContent(string &$response, bool $slow = false): void
   {
+    if (!$slow) {
+      echo $response;
+      return;
+    }
+
     @ob_implicit_flush(true);
     @ob_end_flush();
 

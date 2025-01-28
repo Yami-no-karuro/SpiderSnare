@@ -29,16 +29,19 @@ class Kernel
   /**
    * @var null|self $instance
    * @var Engine $engine
-   * @var Logger $logger
+   * @var Logger $errorLogger
+   * @var Logger $infoLogger
    */
   protected static null|self $instance = null;
   protected Engine $engine;
-  protected Logger $logger;
+  protected Logger $errorLogger;
+  protected Logger $infoLogger;
 
   protected function __construct()
   {
     $this->engine = new Engine();
-    $this->logger = new Logger('error');
+    $this->errorLogger = new Logger('error');
+    $this->infoLogger = new Logger('info');
   }
 
   /**
@@ -46,11 +49,29 @@ class Kernel
    */
   public function run(): void
   {
+
+    $this->statistics();
+
     try {
       $controller = new AppController();
       $controller->appAction($this->engine);
     } catch (Exception $e) {
-      $this->logger->write($e->getMessage());
+      $this->errorLogger->write($e->getMessage());
     }
+  }
+
+  protected function statistics(): void
+  {
+    $info = [];
+
+    $info['HTTP_USER_AGENT'] = null;
+    if (array_key_exists('HTTP_USER_AGENT', $_SERVER))
+      $info['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+
+    $info['REMOTE_ADDR'] = null;
+    if (array_key_exists('REMOTE_ADDR', $_SERVER))
+      $info['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
+
+    $this->infoLogger->write("IP: {$info['REMOTE_ADDR']}, User Agent: {$info['HTTP_USER_AGENT']}");
   }
 }

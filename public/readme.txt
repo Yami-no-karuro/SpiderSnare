@@ -1,6 +1,3 @@
-<< Spider-Snare >>
-<< A simple loop-hole for web-spiders and crawlers >>
-
 Declaration of Intent
 
 This software was designed and developed for educational purposes only.
