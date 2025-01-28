@@ -13,8 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Kernel
 {
 
-  protected const BYTE_DELAY = 5000;
-
   /**
    * @return self
    */

@@ -13,9 +13,6 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class AppController
 {
 
-  protected const CORPUS_DATA_PATH = 'corpus/corpus.csv';
-  protected const BYTE_DELAY = 5000;
-
   /**
    * @param Engine $template
    * @return void
@@ -66,7 +63,7 @@ class AppController
       echo $byte;
 
       flush();
-      usleep(self::BYTE_DELAY);
+      usleep(RESPONSE_BYTE_DELAY);
     }
 
     flush();
@@ -78,7 +75,7 @@ class AppController
   protected function parseCorpus(): array
   {
     $rows = [];
-    $corpusPath = getProjectRoot() . self::CORPUS_DATA_PATH;
+    $corpusPath = getProjectRoot() . CORPUS_DATA_PATH;
     $reader = new Reader($corpusPath);
 
     $keys = [];
