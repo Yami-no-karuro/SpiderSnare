@@ -9,7 +9,16 @@
 </head>
 
 <body>
-  <h1> Hello, World! </h1>
+  <ul>
+    <?php foreach ($links as $link) { ?>
+      <li>
+        <a href="<?php echo $link['path']; ?>"
+          alt="<?php echo $link['description']; ?>">
+          <?php echo $link['name']; ?>
+        </a>
+      </li>
+    <?php } ?>
+  </ul>
 </body>
 
 </html>

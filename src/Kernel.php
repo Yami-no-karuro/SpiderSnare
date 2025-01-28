@@ -13,7 +13,7 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class Kernel
 {
 
-  protected const BYTE_DELAY = 25000;
+  protected const BYTE_DELAY = 5000;
 
   /**
    * @return self
@@ -44,15 +44,33 @@ class Kernel
   public function run(): void
   {
     $controller = new AppController();
-    $html = $controller->appAction($this->engine);
+    $response = $controller->appAction($this->engine);
 
+    $this->sendHeaders($response);
+    $this->streamResponse($response);
+  }
+
+  /**
+   * @param string $response
+   * @return void
+   */
+  protected function sendHeaders(string &$response): void
+  {
+    header('Content-Type: text/html');
+    header('Content-Length: ' . strlen($response));
+  }
+
+  /**
+   * @param string $response
+   * @return void
+   */
+  protected function streamResponse(string &$response): void
+  {
     ob_implicit_flush(true);
     ob_end_flush();
 
-    header('Content-Type: text/html');
-    header('Content-Length: ' . strlen($html));
-
-    foreach (str_split($html) as $byte) {
+    $splitted = str_split($response);
+    foreach ($splitted as $byte) {
       echo $byte;
 
       flush();
