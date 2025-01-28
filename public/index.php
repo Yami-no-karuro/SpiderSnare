@@ -2,7 +2,7 @@
 
 use App\Kernel;
 
-error_reporting(0);
+// error_reporting(0);
 define('NO_DIRECT_ACCESS', 'true');
 
 require_once(__DIR__ . '/../src/functions.php');

@@ -55,8 +55,8 @@ class AppController
    */
   protected function streamContent(string &$response): void
   {
-    ob_implicit_flush(true);
-    ob_end_flush();
+    @ob_implicit_flush(true);
+    @ob_end_flush();
 
     $splitted = str_split($response);
     foreach ($splitted as $byte) {

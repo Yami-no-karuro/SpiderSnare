@@ -14,7 +14,7 @@ class Logger
   public function __construct(string $domain)
   {
     $this->domain = $domain;
-    $this->path = getProjectRoot() . 'var/logs/' . $this->domain . '.log.txt';
+    $this->path = getProjectRoot() . 'var/log/' . $this->domain . '.log.txt';
   }
 
   /**
