@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Controller\AppController;
+use App\Module\Logger;
 use App\Template\Engine;
+use Exception;
 
 if (!defined('NO_DIRECT_ACCESS')) {
   header('HTTP/1.1 403 Forbidden');
@@ -27,13 +29,16 @@ class Kernel
   /**
    * @var null|self $instance
    * @var Engine $engine
+   * @var Logger $logger
    */
   protected static null|self $instance = null;
   protected Engine $engine;
+  protected Logger $logger;
 
   protected function __construct()
   {
     $this->engine = new Engine();
+    $this->logger = new Logger('error');
   }
 
   /**
@@ -41,7 +46,11 @@ class Kernel
    */
   public function run(): void
   {
-    $controller = new AppController();
-    $controller->appAction($this->engine);
+    try {
+      $controller = new AppController();
+      $controller->appAction($this->engine);
+    } catch (Exception $e) {
+      $this->logger->write($e->getMessage());
+    }
   }
 }

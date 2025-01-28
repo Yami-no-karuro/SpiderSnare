@@ -1,2 +1,5 @@
 /corpus/*
 !/corpus/corpus.csv
+
+/var/log/*
+!/var/log/.gitkeep
