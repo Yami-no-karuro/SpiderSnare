@@ -45,10 +45,10 @@ class AppController
    */
   protected function parseCorpus(): array
   {
+    $rows = [];
     $corpusPath = getProjectRoot() . self::CORPUS_DATA_PATH;
     $reader = new Reader($corpusPath);
 
-    $rows = [];
     $keys = [];
     foreach ($reader->getRows() as $index => $row) {
       if ($index === 0) {
