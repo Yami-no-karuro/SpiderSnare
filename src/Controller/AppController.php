@@ -10,16 +10,35 @@ if (!defined('NO_DIRECT_ACCESS')) {
   die();
 }
 
-class AppController
+class AppController extends MasterController
 {
-
-  protected const SLOW = false;
 
   /**
    * @param Engine $template
    * @return void
    */
   public function appAction(Engine $template): void
+  {
+    $links = $this->getRandomLinks();
+    $content = $template->render('app.template.php', [
+      'title' => 'Spider-Snare',
+      'description' => 'A simple loop-hole for web-spiders and crawlers.',
+      'author' => 'Yami-no-karuro',
+      'links' => $links
+    ]);
+
+    $this->headers(
+      MasterController::HTTP_OK,
+      MasterController::CONTENT_TYPE_HTML
+    );
+
+    $this->content($content);
+  }
+
+  /**
+   * @return array
+   */
+  protected function getRandomLinks(): array
   {
     $links = [];
     $corpus = $this->parseCorpus();
@@ -29,52 +48,7 @@ class AppController
       $links[] = $corpus[$idx];
     }
 
-    $content = $template->render('app.template.php', [
-      'title' => 'Spider-Snare',
-      'description' => 'A simple loop-hole for web-spiders and crawlers.',
-      'author' => 'Yami-no-karuro',
-      'links' => $links
-    ]);
-
-    $this->sendHeaders($content);
-    $this->sendContent($content, self::SLOW);
-  }
-
-  /**
-   * @param string $response
-   * @return void
-   */
-  protected function sendHeaders(string &$response): void
-  {
-    header('HTTP/1.1 200 OK');
-    header('Content-Type: text/html');
-    header('Content-Length: ' . strlen($response));
-  }
-
-  /**
-   * @param string $response
-   * @param bool $slow
-   * @return void
-   */
-  protected function sendContent(string &$response, bool $slow = false): void
-  {
-    if (!$slow) {
-      echo $response;
-      return;
-    }
-
-    @ob_implicit_flush(true);
-    @ob_end_flush();
-
-    $splitted = str_split($response);
-    foreach ($splitted as $byte) {
-      echo $byte;
-
-      flush();
-      usleep(RESPONSE_BYTE_DELAY);
-    }
-
-    flush();
+    return $links;
   }
 
   /**
