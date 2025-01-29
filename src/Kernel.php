@@ -49,8 +49,6 @@ class Kernel
    */
   public function run(): void
   {
-    $this->statistics();
-
     try {
       $controller = new AppController();
       $controller->appAction($this->engine);
@@ -58,6 +56,8 @@ class Kernel
       $this->errorLogger->write($e->getMessage());
       die();
     }
+
+    $this->statistics();
   }
 
   protected function statistics(): void
@@ -68,6 +68,10 @@ class Kernel
     if (array_key_exists('REQUEST_METHOD', $_SERVER))
       $info['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
 
+    $info['REQUEST_URI'] = 'unknown';
+    if (array_key_exists('REQUEST_URI', $_SERVER))
+      $info['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
+
     $info['HTTP_USER_AGENT'] = 'unknown';
     if (array_key_exists('HTTP_USER_AGENT', $_SERVER))
       $info['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
@@ -76,6 +80,6 @@ class Kernel
     if (array_key_exists('REMOTE_ADDR', $_SERVER))
       $info['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 
-    $this->networkLogger->write("[{$info['REQUEST_METHOD']}] - {$info['REMOTE_ADDR']} ({$info['HTTP_USER_AGENT']})");
+    $this->networkLogger->write("[{$info['REQUEST_METHOD']} - {$info['REQUEST_URI']}] - {$info['REMOTE_ADDR']} ({$info['HTTP_USER_AGENT']})");
   }
 }
