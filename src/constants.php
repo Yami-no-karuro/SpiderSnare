@@ -6,5 +6,3 @@ if (!defined('NO_DIRECT_ACCESS')) {
 }
 
 const DEFAULT_TIMEZONE = 'Europe/Rome';
-const CORPUS_DATA_PATH = 'corpus/corpus.csv';
-const RESPONSE_BYTE_DELAY = 5000;

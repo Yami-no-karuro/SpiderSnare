@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Cache\Agent;
 use App\Module\Reader;
 use App\Template\Engine;
 
@@ -13,6 +14,11 @@ if (!defined('NO_DIRECT_ACCESS')) {
 class AppController extends MasterController
 {
 
+  protected const CORPUS_DATA_PATH = 'corpus/corpus.csv';
+  protected const APP_TITLE = 'Spider-Snare';
+  protected const APP_DESCRIPTION = 'A simple loop-hole for web-spiders and crawlers.';
+  protected const APP_AUTHOR = '#zerotrace';
+
   /**
    * @param Engine $template
    * @return void
@@ -21,9 +27,9 @@ class AppController extends MasterController
   {
     $links = $this->getRandomLinks();
     $content = $template->render('app.template.php', [
-      'title' => 'Spider-Snare',
-      'description' => 'A simple loop-hole for web-spiders and crawlers.',
-      'author' => 'Yami-no-karuro',
+      'title' => self::APP_TITLE,
+      'description' => self::APP_DESCRIPTION,
+      'author' => self::APP_AUTHOR,
       'links' => $links
     ]);
 
@@ -41,7 +47,10 @@ class AppController extends MasterController
   protected function getRandomLinks(): array
   {
     $links = [];
-    $corpus = $this->parseCorpus();
+    if (null === ($corpus = Agent::get('corpus'))) {
+      $corpus = $this->parseCorpus();
+      Agent::set('corpus', $corpus);
+    }
 
     for ($i = 0; $i < 10; $i++) {
       $idx = random_int(0, 1000);
@@ -57,7 +66,7 @@ class AppController extends MasterController
   protected function parseCorpus(): array
   {
     $rows = [];
-    $corpusPath = getProjectRoot() . CORPUS_DATA_PATH;
+    $corpusPath = getProjectRoot() . self::CORPUS_DATA_PATH;
     $reader = new Reader($corpusPath);
 
     $keys = [];

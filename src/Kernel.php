@@ -30,18 +30,18 @@ class Kernel
    * @var null|self $instance
    * @var Engine $engine
    * @var Logger $errorLogger
-   * @var Logger $infoLogger
+   * @var Logger $networkLogger
    */
   protected static null|self $instance = null;
   protected Engine $engine;
   protected Logger $errorLogger;
-  protected Logger $infoLogger;
+  protected Logger $networkLogger;
 
   protected function __construct()
   {
     $this->engine = new Engine();
     $this->errorLogger = new Logger('error');
-    $this->infoLogger = new Logger('info');
+    $this->networkLogger = new Logger('network');
   }
 
   /**
@@ -49,7 +49,6 @@ class Kernel
    */
   public function run(): void
   {
-
     $this->statistics();
 
     try {
@@ -57,6 +56,7 @@ class Kernel
       $controller->appAction($this->engine);
     } catch (Exception $e) {
       $this->errorLogger->write($e->getMessage());
+      die();
     }
   }
 
@@ -64,14 +64,18 @@ class Kernel
   {
     $info = [];
 
-    $info['HTTP_USER_AGENT'] = null;
+    $info['REQUEST_METHOD'] = 'unknown';
+    if (array_key_exists('REQUEST_METHOD', $_SERVER))
+      $info['REQUEST_METHOD'] = $_SERVER['REQUEST_METHOD'];
+
+    $info['HTTP_USER_AGENT'] = 'unknown';
     if (array_key_exists('HTTP_USER_AGENT', $_SERVER))
       $info['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
-    $info['REMOTE_ADDR'] = null;
+    $info['REMOTE_ADDR'] = 'unknown';
     if (array_key_exists('REMOTE_ADDR', $_SERVER))
       $info['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 
-    $this->infoLogger->write("IP: {$info['REMOTE_ADDR']}, User Agent: {$info['HTTP_USER_AGENT']}");
+    $this->networkLogger->write("[{$info['REQUEST_METHOD']}] - {$info['REMOTE_ADDR']} ({$info['HTTP_USER_AGENT']})");
   }
 }

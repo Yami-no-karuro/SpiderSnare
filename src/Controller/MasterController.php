@@ -23,6 +23,8 @@ class MasterController
   public const CONTENT_TYPE_JSON = 'application/json';
   public const CONTENT_TYPE_CSV = 'text/csv';
 
+  protected const RESPONSE_BYTE_DELAY = 0;
+
   /**
    * @param string $status
    * @param string $contentType
@@ -39,16 +41,23 @@ class MasterController
 
   /**
    * @param string $response
+   * @param bool $streamed
    * @return void
    */
-  protected function content(string &$response): void
+  protected function content(string &$response, bool $streamed = false): void
   {
+    header('Content-Length: ' . strlen($response));
+    if (!$streamed) {
+      echo $response;
+      return;
+    }
+
     $splitted = str_split($response);
     foreach ($splitted as $byte) {
       echo $byte;
 
       flush();
-      usleep(RESPONSE_BYTE_DELAY);
+      usleep(self::RESPONSE_BYTE_DELAY);
     }
   }
 }
