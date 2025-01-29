@@ -29,8 +29,6 @@ class Engine
    * @param string $templateFile
    * @param array $variables
    * @return string
-   *
-   * @throws Exception
    */
   public function render(string $templateFile, array $variables = []): string
   {

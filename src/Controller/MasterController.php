@@ -36,7 +36,6 @@ class MasterController
   ): void {
     header("HTTP/1.1 {$status}");
     header("Content-Type: {$contentType}");
-    header('Connection: keep-alive');
   }
 
   /**
