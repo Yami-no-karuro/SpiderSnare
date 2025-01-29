@@ -23,7 +23,7 @@ class MasterController
   public const CONTENT_TYPE_JSON = 'application/json';
   public const CONTENT_TYPE_CSV = 'text/csv';
 
-  protected const RESPONSE_BYTE_DELAY = 0;
+  protected const RESPONSE_BYTE_DELAY = 2500;
 
   /**
    * @param string $status
@@ -52,8 +52,8 @@ class MasterController
       return;
     }
 
-    $splitted = str_split($response);
-    foreach ($splitted as $byte) {
+    header('Connection: keep-alive');
+    foreach (str_split($response) as $byte) {
       echo $byte;
 
       flush();
