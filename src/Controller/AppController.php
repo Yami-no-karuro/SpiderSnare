@@ -38,7 +38,7 @@ class AppController extends MasterController
       MasterController::CONTENT_TYPE_HTML
     );
 
-    $this->content($content);
+    $this->content($content, true);
   }
 
   /**
