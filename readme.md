@@ -17,7 +17,6 @@ Use of this software in unauthorized environments or for malicious purposes is *
 The project aims to emulate a simple loop-hole for web-spiders and crawlers by generating unique **pages** and **links** interconnected in a **limitless loop**.  
 For each request the engine generates **unique content** that is than **slowly** streamed back to the client in order to keep the crawler (or any not-so-intelligent visitor) **busy** for as long as possible.  
 When a web-spider or a crawler ends up in the trap they are potentially **blocked forever**, or at least until they realize the deception and **stop browsing**.  
-This software therefore falls into the category of **denial of service** utilities.
 
 **ATTENTION!**  
 As mentioned in the **Declaration of Intent** this software was designed and developed for **educational purposes** only.  
